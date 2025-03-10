@@ -1,33 +1,29 @@
-def KSA(key):
-    key_length = len(key)
+def rc4(key, text):
+
     S = list(range(256))
+    key_length = len(key)
+
     j = 0
     for i in range(256):
         j = (j + S[i] + key[i % key_length]) % 256
         S[i], S[j] = S[j], S[i]
-    return S
 
-def PRGA(S, text_length):
+    result = []
     i = j = 0
-    key_stream = []
-    for _ in range(text_length):
+    for char in text:
         i = (i + 1) % 256
         j = (j + S[i]) % 256
         S[i], S[j] = S[j], S[i]
-        key_stream.append(S[(S[i] + S[j]) % 256])
-    return key_stream
+        k = S[(S[i] + S[j]) % 256]
+        result.append(chr(ord(char) ^ k))
 
-def RC4_encrypt(text, key):
-    key = [ord(c) for c in key]
-    S = KSA(key)
-    key_stream = PRGA(S, len(text))
-    cipher = [ord(text[i]) ^ key_stream[i] for i in range(len(text))]
-    return key_stream, cipher
+    return ''.join(result), ''.join([f"{ord(c):02x}" for c in result])
 
-key = "IOTK67"
+
+key = "E9thieugai"
 text = "Hanoi University of Science and Technology"
 
-key_stream, cipher_text = RC4_encrypt(text, key)
+cipher_text, keystream = rc4([ord(c) for c in key], text)
 
-print("Key Stream:", key_stream)
-print("Cipher Text:", cipher_text)
+print(f"Keystream: {keystream}")
+print(f"Ciphertext: {''.join([f'{ord(c):02x}' for c in cipher_text])}")
