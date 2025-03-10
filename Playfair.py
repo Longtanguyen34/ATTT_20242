@@ -28,7 +28,7 @@ def find_position(matrix, char):
 
 def preprocess_plaintext(text):
     text = text.upper().replace("J", "I")  # Thay 'J' bang 'I'
-    processed_text = "".join(c for c in text if c.isalpha())  # giu lai chu cai
+    processed_text = "".join(c for c in text if c.isalpha())  # giu lai chu cai 
 
     result = ""
     i = 0
